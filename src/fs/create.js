@@ -1,13 +1,12 @@
 import { promises as fs } from 'fs';
 import path from 'node:path';
-import { fileURLToPath } from 'url';
+import { getDirname } from '../utils/dirname.js';
 
 // implement function that creates new file `fresh.txt` with content `I am fresh and young` inside of the `files` folder
 // if file already exists `Error` with message `FS operation failed` must be thrown
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Use `fileURLToPath` to get the current file directory
-
 const create = async () => {
+  const __dirname = getDirname(import.meta.url);
   const newFileName = 'fresh.txt';
   const filePath = path.join(__dirname, 'files', newFileName);
   const fileContent = 'I am fresh and young';
@@ -23,4 +22,4 @@ const create = async () => {
   }
 };
 
-create();
+await create();
