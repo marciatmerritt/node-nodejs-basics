@@ -12,7 +12,7 @@ const copy = async () => {
 
         const filesFolderExists = await fs.access(filesSrcPath).then(() => true).catch(() => false);
         if(!filesFolderExists) {
-            throw new Error("FS operation failed: files folder already exists");
+            throw new Error("FS operation failed: files folder does not exist");
         }
 
         const filesCopyFolderExists = await fs.access(filesDestPath).then(() => true).catch(() => false);
