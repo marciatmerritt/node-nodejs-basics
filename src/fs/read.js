@@ -12,16 +12,16 @@ const read = async () => {
   const readFileName = 'fileToRead.txt';
   const readFilePath = path.join(dirPath, readFileName);
 
-    try {
-        const fileContent = await fs.readFile(readFilePath, 'utf-8');
-        console.log(fileContent);
-    } catch (error) {
-        if (error.code === ERROR_NO_ENTITY) {
-            throw new Error(`FS operation failed: ${readFileName} does not exist`);
-          } else {
-            throw new Error('FS operation failed - Unexpected error: ', error);
-          } 
+  try {
+    const fileContent = await fs.readFile(readFilePath, 'utf-8');
+    console.log(fileContent);
+  } catch (error) {
+    if (error.code === ERROR_NO_ENTITY) {
+      throw new Error(`FS operation failed: ${readFileName} does not exist`);
+    } else {
+      throw new Error('FS operation failed - Unexpected error: ', error);
     }
+  }
 };
 
 await read();
