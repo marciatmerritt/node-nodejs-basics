@@ -12,10 +12,10 @@ import { getDirname } from '../utils/dirname.js';
 // - `data` - value from `worker` in case of success or `null` in case of error in worker
 
 const performCalculations = async () => {
-  const numCPUs = cpus().length;
-  const workers = [];
   const __dirname = getDirname(import.meta.url);
   const workerFile = path.join(__dirname, 'worker.js');
+  const numCPUs = cpus().length;
+  const workers = [];
 
   // Function to create a worker promise that resolves the worker's result
   const createWorkerPromise = (workerData) => {
