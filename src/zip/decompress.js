@@ -9,7 +9,7 @@ import { getDirname } from '../utils/dirname.js';
 
 const decompress = async () => {
   const __dirname = getDirname(import.meta.url);
-  const outputFile = path.join(__dirname, 'files', 'fileToCompress2.txt');
+  const outputFile = path.join(__dirname, 'files', 'fileToCompress.txt');
   const inputFile = path.join(__dirname, 'files/archive.gz');
 
   const readStream = createReadStream(inputFile);
