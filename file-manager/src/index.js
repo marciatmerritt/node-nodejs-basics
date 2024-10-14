@@ -1,15 +1,15 @@
 import { stdin, exit, cwd, stdout } from 'node:process';
-import { normalize } from 'node:path';
-import { CTRL_C_TERMINATE, CURRENT_DIR_MSG, HOME_DIR, INVALID_COMMAND, INVALID_INPUT, SYS_EOL } from './utils/constants.js';
+import { CTRL_C_TERMINATE, CURRENT_DIR_MSG, INVALID_COMMAND } from './utils/constants.js';
 import { getHomeDir } from './utils/osInfo.js';
-import { getCLIUsername } from './utils/cli.js';
-import { logger, displayPrompt, readline } from './utils/utils.js';
+import { getCLIUsername, readline } from './utils/cli.js';
+import { logger } from './utils/utils.js';
 import { handleOSCommands } from './commands/os.js';
 import { handleHashCommands } from './commands/hash.js';
+import { handleCompressCommand, handleDecompressCommand } from './commands/zip.js';
 
 // get username from CLI argument passed on app start
 const username = getCLIUsername();
-const userHomeDir = getHomeDir();
+const userHomeDir = await getHomeDir();
 
 const welcomeMsg = `Welcome to the File Manager, ${username}!`;
 const exitMsg = `\nThank you for using File Manager, ${username}, goodbye!`;
@@ -17,8 +17,7 @@ const exitMsg = `\nThank you for using File Manager, ${username}, goodbye!`;
 console.log(welcomeMsg);
 console.log(CURRENT_DIR_MSG + userHomeDir);
 
-displayPrompt(readline);
-
+readline.prompt();
 
 readline.on(CTRL_C_TERMINATE, () => {
     console.log(exitMsg);
@@ -38,10 +37,10 @@ readline.on('line', async (input) => {
         console.log(exitMsg);
         readline.close();
     } else {
-        readline.pause(); // pause prompt while processing command
+        readline.pause();
         await handleCommands(trimmedInput);
         readline.resume();
-        setTimeout(() => displayPrompt(readline), 50);
+        readline.prompt();
     }
 });
 
@@ -52,10 +51,16 @@ const handleCommands = async (input) => {
 
   switch (command) {
     case 'os':
-        await handleOSCommands(args);
+        handleOSCommands(args);
         break;
     case 'hash':
         await handleHashCommands(args);
+        break;
+    case 'compress':
+        await handleCompressCommand(args);
+        break;
+    case 'decompress':
+        await handleDecompressCommand(args);
         break;
     default:
       console.log(INVALID_COMMAND);
