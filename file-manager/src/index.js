@@ -20,7 +20,7 @@ console.log(CURRENT_DIR_MSG + userHomeDir);
 readline.prompt();
 
 readline.on(CTRL_C_TERMINATE, () => {
-    console.log(exitMsg);
+    logger(exitMsg);
     readline.close();
 });
 
@@ -34,7 +34,7 @@ readline.on('line', async (input) => {
     const trimmedInput = input.trim();
 
     if (trimmedInput === '.exit') {
-        console.log(exitMsg);
+        logger(exitMsg);
         readline.close();
     } else {
         readline.pause();
@@ -46,12 +46,10 @@ readline.on('line', async (input) => {
 
 const handleCommands = async (input) => {
   const [command, ...args] = input.split(' ');
-//   console.log(command);
-//   console.log(args);
 
   switch (command) {
     case 'os':
-        handleOSCommands(args);
+        await handleOSCommands(args);
         break;
     case 'hash':
         await handleHashCommands(args);
@@ -63,6 +61,6 @@ const handleCommands = async (input) => {
         await handleDecompressCommand(args);
         break;
     default:
-      console.log(INVALID_COMMAND);
+      logger(INVALID_COMMAND);
   }
 };

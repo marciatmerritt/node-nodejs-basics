@@ -2,8 +2,8 @@ import { createReadStream, createWriteStream } from 'node:fs';
 import { normalize } from 'node:path';
 import { pipeline } from 'node:stream';
 import { createGunzip } from 'node:zlib';
-import { FILE_ALREADY_EXISTS, FILE_NOT_FOUND } from './constants.js';
-import { fileExists } from './utils.js';
+import { ERROR_TYPE, FILE_ALREADY_EXISTS, FILE_NOT_FOUND } from './constants.js';
+import { fileExists, logger } from './utils.js';
 
 export const decompress = async (inputFilepath, outputFilepath) => {
   const inputFile = normalize(inputFilepath);
@@ -12,12 +12,12 @@ export const decompress = async (inputFilepath, outputFilepath) => {
   try {
     await fileExists(inputFile);
   } catch (error) {
-    console.error(`Input ${FILE_NOT_FOUND} at ${inputFile}`);
+    logger(`Input ${FILE_NOT_FOUND} at ${inputFile}`, ERROR_TYPE);
   };
 
     try {
       await fileExists(outputFile);
-      console.error(`Output ${FILE_ALREADY_EXISTS} at ${outputFile}`);
+      logger(`Output ${FILE_ALREADY_EXISTS} at ${outputFile}`, ERROR_TYPE);
       return;
     } catch (error) {
       // Output file does not exist, proceed with compression

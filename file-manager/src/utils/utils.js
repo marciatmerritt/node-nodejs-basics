@@ -1,4 +1,4 @@
-import { cwd, exit, stdin, stdout } from 'process';
+import { stderr, stdout } from 'process';
 import { promises as fs } from 'fs';
 
 // Converts a speed in MHz to GHz by dividing the value by 1000.
@@ -7,10 +7,19 @@ export const convertMHzToGHz = (speedMHz) => {
   return speedMHz / 1000;
 };
 
-// Logs a message to stdout (standard output) and appends a newline character.
-// This function is useful for cleanly outputting messages without using console.log().
-export const logger = (message) => {
-  stdout.write(message + '\n');
+/**
+ * Logs a message to stdout (standard output) or stderr (standard error) based on the log type.
+ * 
+ * @param {string} message - The message to log.
+ * @param {string} [type='info'] - The type of log ('info' for stdout, 'error' for stderr).
+ *                                Defaults to 'info' for standard output logging.
+ */
+export const logger = (message, type = 'info') => {
+  if (type === 'error') {
+    stderr.write(message + '\n');
+  } else {
+    stdout.write(message + '\n');
+  }
 };
 
 /**

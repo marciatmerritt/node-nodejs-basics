@@ -2,8 +2,8 @@ import { createReadStream, createWriteStream } from 'node:fs';
 import { normalize } from 'node:path';
 import { pipeline } from 'node:stream';
 import { createGzip } from 'node:zlib';
-import { fileExists } from './utils.js';
-import { FILE_ALREADY_EXISTS, FILE_NOT_FOUND, OPERATION_FAILED } from './constants.js';
+import { fileExists, logger } from './utils.js';
+import { ERROR_TYPE, FILE_ALREADY_EXISTS, FILE_NOT_FOUND, OPERATION_FAILED } from './constants.js';
 
 /**
  * Compresses a file using Gzip.
@@ -16,14 +16,14 @@ export const compress = async (inputFilepath, outputFilepath) => {
 
   const doesInputFileExist = await fileExists(inputFile);
   if (!doesInputFileExist) {
-    console.error(`${OPERATION_FAILED}: Input ${FILE_NOT_FOUND} at ${inputFile}`);
+    logger(`${OPERATION_FAILED}: Input ${FILE_NOT_FOUND} at ${inputFile}`, ERROR_TYPE);
     return;
   }
 
   const outputFile = normalize(outputFilepath);
   const doesOutputFileExist = await fileExists(outputFile);
   if (doesOutputFileExist) {
-    console.error(`${OPERATION_FAILED}: Output ${FILE_ALREADY_EXISTS} at ${outputFile}`);
+    logger(`${OPERATION_FAILED}: Output ${FILE_ALREADY_EXISTS} at ${outputFile}`, ERROR_TYPE);
     return;
   }
 
@@ -41,8 +41,8 @@ export const compress = async (inputFilepath, outputFilepath) => {
             }
         });
     });
-    console.log('File successfully compressed!');
+    logger('File successfully compressed!');
   } catch (error) {
-    console.error(`${OPERATION_FAILED}: Compression failed due to ${error.message}`)
+    logger(`${OPERATION_FAILED}: Compression failed due to ${error.message}`, ERROR_TYPE);
   }
 };

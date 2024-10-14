@@ -1,12 +1,10 @@
 import { normalize } from 'node:path';
 import {
-    FILE_REQUIRED_MSG,
-    INVALID_INPUT,
-  OPERATION_FAILED, FILE_NOT_FOUND,
-  COMPRESS_ERROR, DECOMPRESS_ERROR,
-  FILE_ALREADY_EXISTS
+  FILE_REQUIRED_MSG, INVALID_INPUT, OPERATION_FAILED,
+  FILE_NOT_FOUND, COMPRESS_ERROR, DECOMPRESS_ERROR,
+  FILE_ALREADY_EXISTS, ERROR_TYPE
 } from '../utils/constants.js';
-import { fileExists } from '../utils/utils.js';
+import { fileExists, logger } from '../utils/utils.js';
 import { compress } from '../utils/compress.js';
 import { decompress } from '../utils/decompress.js';
 
@@ -18,7 +16,7 @@ import { decompress } from '../utils/decompress.js';
  */
 export const handleCompressCommand = async (args) => {
   if (args.length < 2) {
-    console.error(`${INVALID_INPUT}: ${FILE_REQUIRED_MSG}`);
+    logger(`${INVALID_INPUT}: ${FILE_REQUIRED_MSG}`, ERROR_TYPE);
     return;
   };
 
@@ -26,7 +24,7 @@ export const handleCompressCommand = async (args) => {
 
   const doesInputFileExist = await fileExists(inputFilepath);
   if (!doesInputFileExist) {
-    console.error(`${OPERATION_FAILED}: Input ${FILE_NOT_FOUND} at ${inputFilepath}`);
+    logger(`${OPERATION_FAILED}: Input ${FILE_NOT_FOUND} at ${inputFilepath}`, ERROR_TYPE);
     return;
   };
 
@@ -34,17 +32,16 @@ export const handleCompressCommand = async (args) => {
 
   const doesOutputFileExist = await fileExists(outputFilepath);
   if (doesOutputFileExist) {
-    console.error(`${OPERATION_FAILED}: Output ${FILE_ALREADY_EXISTS} at ${outputFilepath}`);
+    logger(`${OPERATION_FAILED}: Output ${FILE_ALREADY_EXISTS} at ${outputFilepath}`, ERROR_TYPE);
     return;
   };
 
   try {
     await compress(inputFilepath, outputFilepath);
   } catch (error) {
-    console.error(`${OPERATION_FAILED}: ${COMPRESS_ERROR} = ${error}`);
+    logger(`${OPERATION_FAILED}: ${COMPRESS_ERROR} = ${error}`, ERROR_TYPE);
   }
 };
-
 
 /**
  * Handles decompress-related commands from the command line.
@@ -54,14 +51,14 @@ export const handleCompressCommand = async (args) => {
  */
 export const handleDecompressCommand = async (args) => {
     if (args.length < 2) {
-      console.error(`${INVALID_INPUT}: ${FILE_REQUIRED_MSG}`);
+      logger(`${INVALID_INPUT}: ${FILE_REQUIRED_MSG}`, ERROR_TYPE);
       return;
     };
   
     const inputFilepath = normalize(args[0]);
     const doesInputFileExist = await fileExists(inputFilepath);
     if (!doesInputFileExist) {
-      console.error(`${OPERATION_FAILED}: ${FILE_NOT_FOUND} at ${inputFilepath}`);
+      logger(`${OPERATION_FAILED}: ${FILE_NOT_FOUND} at ${inputFilepath}`, ERROR_TYPE);
       return;
     };
   
@@ -69,13 +66,13 @@ export const handleDecompressCommand = async (args) => {
     const outputFilepath = normalize(args[1]);
     const doesOutputFileExist = await fileExists(outputFilepath);
   if (!doesOutputFileExist) {
-    console.error(`${OPERATION_FAILED}: ${FILE_NOT_FOUND} at ${outputFilepath}`);
+    logger(`${OPERATION_FAILED}: ${FILE_NOT_FOUND} at ${outputFilepath}`, ERROR_TYPE);
     return;
   };
     try {
       await decompress(inputFilepath, outputFilepath);
     } catch (error) {
-      console.error(`${OPERATION_FAILED}: ${DECOMPRESS_ERROR} = ${error}`);
+      logger(`${OPERATION_FAILED}: ${DECOMPRESS_ERROR} = ${error}`, ERROR_TYPE);
     }
   };
   

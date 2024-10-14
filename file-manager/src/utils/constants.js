@@ -1,6 +1,8 @@
 export const ERROR_NO_ENTITY_CODE = 'ENOENT';
 export const FILE_EXISTS_CODE = 'EEXIST';
 export const CTRL_C_TERMINATE = `SIGINT`;
+export const ERROR_TYPE = 'error';
+export const INFO_TYPE = 'info';
 
 export const CURRENT_DIR_MSG = `You are currently in `;
 export const FILE_REQUIRED_MSG = 'File path is required for this command';
